@@ -56,15 +56,15 @@ fi
 
 eval `ffprobe -print_format flat=s=_ -show_format -show_streams "$in"`
 
-. ffstreamselect.sh
+. ffstreamselect.inc
 
-. fffiltergraph.sh
+. fffiltergraph.inc
 
 add_filters
 
 # if we want to hardsub... let's do it
 if $hardsub; then
-	. ffhardsub.sh
+	. ffhardsub.inc
 fi
 
 connect_inputs
