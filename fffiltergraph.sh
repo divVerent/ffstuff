@@ -5,6 +5,18 @@
 # OUTPUT: ffmpeg command line with the filters removed in "$@", and $filtergraph
 # also: filter graph management functions
 
+add_filter()
+{
+	case "$filtergraph" in
+		'')
+			filtergraph="$1"
+			;;
+		*)
+			filtergraph="$filtergraph;$1"
+			;;
+	esac
+}
+
 filtergraph=
 isfilter=false
 first=true
@@ -16,7 +28,7 @@ for arg in "$@"; do
 	fi
 	if $isfilter; then
 		isfilter=false
-		filtergraph="$filtergraph;$arg"
+		add_filter "$arg"
 	elif [ x"$arg" = x"-filter_complex" ]; then
 		isfilter=true
 	else
@@ -45,6 +57,7 @@ rewire_or()
 
 # plug_before_last:
 # parameters: A B
+# output: $plug
 # "insert before B"
 # [A] foo [B]
 # [A] foo [REWIRED] bar [B]
@@ -54,13 +67,17 @@ rewire_or()
 wire=0
 plug_before_last()
 {
-	n=REWIRED_$wire
 	wire=$(($wire + 1))
-	rewire_or "$2" "$wire" "$1"
+	if rewire "$2" "PLUG_$wire"; then
+		plug=PLUG_$wire
+	else
+		plug=$1
+	fi
 }
 
 # plug_after_first:
 # parameters: A B
+# output: $plug
 # "insert after A"
 # [A] foo [B]
 # [A] bar [REWIRED] foo [B]
@@ -69,21 +86,12 @@ plug_before_last()
 
 plug_after_first()
 {
-	n=REWIRED_$wire
 	wire=$(($wire + 1))
-	rewire_or "$1" "$wire" "$2"
-}
-
-add_filter()
-{
-	case "$filtergraph" in
-		'')
-			filtergraph="$1"
-			;;
-		*)
-			filtergraph="$filtergraph;$1"
-			;;
-	esac
+	if rewire "$1" "PLUG_$wire"; then
+		plug=PLUG_$wire
+	else
+		plug=$2
+	fi
 }
 
 have_label()

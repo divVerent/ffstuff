@@ -60,53 +60,62 @@ use_streams()
 	fi
 }
 
+match_lang()
+{
+	# $1: stream type
+	# $2: stream number or stream type (for all) or empty string (for none)
+	# $3: stream language
+	# $4: requested language
+
+	# lowercase and clean up the stream language
+	set -- "$1" "$2" "`echo "$3" | tr -d : | tr A-Z a-z`" "$4"
+	echo >&2 "match_lang($1, $2, $3, $4)"
+	# match
+	case "$2":"$3":"$4" in
+		# requested is empty: we want no stream at all
+		'':*:'') ;;
+		*:*:'') return 1 ;;
+		# requested is *: take them all
+		"$4":*:'*') ;;
+		# requested is ?: take ANY stream
+		[0-9]*:*:'?') ;;
+		# wantslang is a stream number: take it
+		[0-9]*:*:"$2") ;;
+		# wantslang is a prefix for the language: take it
+		[0-9]*:"$4"*:*) ;;
+		# otherwise fail
+		*) return 1 ;;
+	esac
+	echo >&2 "YES"
+	return 0
+}
+
 try_sub()
 {
 	eval slang=\$streams_stream_${s}_tags_language
-	case "$s":"$wantslang" in
-		'':'') ;;
-		*:'') return ;;
-		s:'*') ;;
-		[0-9]*:'?') ;;
-		[0-9]*:"$s") ;;
-		[0-9]*:"$slang") ;;
-		*) return ;;
-	esac
-	use_streams
+	if match_lang s "$s" "$slang" "$wantslang"; then
+		use_streams
+	fi
 }
 
 try_audio()
 {
 	eval alang=\$streams_stream_${a}_tags_language
-	case "$a":"$wantalang" in
-		'':'') ;;
-		*:'') return ;;
-		a:'*') ;;
-		[0-9]*:'?') ;;
-		[0-9]*:"$a") ;;
-		[0-9]*:"$alang") ;;
-		*) return ;;
-	esac
-	for s in $sstreams '' s; do
-		try_sub
-	done
+	if match_lang a "$a" "$alang" "$wantalang"; then
+		for s in $sstreams '' s; do
+			try_sub
+		done
+	fi
 }
 
 try_video()
 {
 	eval vlang=\$streams_stream_${v}_tags_language
-	case "$v":"$wantvlang" in
-		'':'') ;;
-		*:'') return ;;
-		v:'*') ;;
-		[0-9]*:'?') ;;
-		[0-9]*:"$v") ;;
-		[0-9]*:"$vlang") ;;
-		*) return ;;
-	esac
-	for a in $astreams '' a; do
-		try_audio
-	done
+	if match_lang v "$v" "$vlang" "$wantvlang"; then
+		for a in $astreams '' a; do
+			try_audio
+		done
+	fi
 }
 
 try_language()
@@ -131,5 +140,10 @@ try_language()
 hiscore=0
 
 try_languages
+
+if [ $hiscore -le 0 ]; then
+	echo >&2 "No streams found."
+	exit 1
+fi
 
 echo >&2 "Selected $v/$a/$s"

@@ -19,8 +19,8 @@ shift
 out=$1
 shift
 
-if ! [ -f ~/.ffautostreamsrc ]; then
-	cat >~/.ffautostreamsrc <<'EOF'
+if ! [ -f ~/.ffencoderc ]; then
+	cat >~/.ffencoderc <<'EOF'
 hardsub=true
 try_languages()
 {
@@ -49,7 +49,7 @@ case "$conf" in
 		conf="$PWD/$conf"
 		;;
 esac
-. ~/.ffautostreamsrc
+. ~/.ffencoderc
 if [ -f "$conf" ]; then
 	. "$conf"
 fi
@@ -69,10 +69,12 @@ fi
 
 rewire_inputs
 set -- `connect_outputs` "$@"
-set -- -filter_complex "$filtergraph" "$@"
+if [ -n "$filtergraph" ]; then
+	set -- -filter_complex "$filtergraph" "$@"
+fi
 
 # run the encode!
-set -x
+echo >&2 "+ ffmpeg -i $in $* $out"
 ffmpeg -i "$in" "$@" "$out"
 
 # clean up
