@@ -67,7 +67,7 @@ if $hardsub; then
 	. ffhardsub.sh
 fi
 
-rewire_inputs
+connect_inputs
 set -- `connect_outputs` "$@"
 if [ -n "$filtergraph" ]; then
 	set -- -filter_complex "$filtergraph" "$@"

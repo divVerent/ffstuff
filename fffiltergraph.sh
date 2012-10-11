@@ -36,12 +36,10 @@ for arg in "$@"; do
 	fi
 done
 
-rewire()
+have_label()
 {
 	case "$filtergraph" in
 		*\[$1\]*)
-			filtergraph=`echo "$filtergraph" |\
-				sed -e "s/\[$1\]/\[$2\]/g"`
 			true
 			;;
 		*)
@@ -50,9 +48,15 @@ rewire()
 	esac
 }
 
-rewire_or()
+rewire()
 {
-	rewire "$1" "$2" && echo "$2" || echo "$3"
+	if have_label "$1"; then
+		filtergraph=`echo "$filtergraph" |\
+			sed -e "s/\[$1\]/\[$2\]/g"`
+		true
+	else
+		false
+	fi
 }
 
 # plug_before_last:
@@ -94,19 +98,7 @@ plug_after_first()
 	fi
 }
 
-have_label()
-{
-	case "$filtergraph" in
-		*\[$1\]*)
-			true
-			;;
-		*)
-			false
-			;;
-	esac
-}
-
-rewire_inputs()
+connect_inputs()
 {
 	if [ -n "${s#s}" ]; then
 		if rewire SUB_IN 0:"$s"; then
