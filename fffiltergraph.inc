@@ -134,23 +134,23 @@ connect_outputs()
 
 	# connect the outputs
 	if have_label VIDEO_OUT; then
-		echo -map "[VIDEO_OUT]" "$@"
+		echo -map "[VIDEO_OUT]"
 	fi
 	if [ -n "$v" ]; then
-		echo -map 0:"$v" "$@"
+		echo -map 0:"$v"
 	fi
 	if have_label AUDIO_OUT; then
-		echo -map "[AUDIO_OUT]" "$@"
+		echo -map "[AUDIO_OUT]"
 	fi
 	if [ -n "$a" ]; then
-		echo -map 0:"$a" "$@"
+		echo -map 0:"$a"
 	fi
 	if ! $hardsub; then
 		if have_label SUB_OUT; then
-			echo -map "[SUB_OUT]" "$@"
+			echo -map "[SUB_OUT]"
 		fi
 		if [ -n "$s" ]; then
-			echo -map 0:"$s" "$@"
+			echo -map 0:"$s"
 		fi
 	fi
 }
