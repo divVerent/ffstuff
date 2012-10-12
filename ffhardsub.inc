@@ -41,10 +41,10 @@ elif [ -n "$s" ]; then
 		eval t=\$streams_stream_${stream}_codec_type
 		case "$t" in
 			attachment)
-				ffmpeg -dump_attachment:$i \
+				ffmpeg -y -dump_attachment:$i \
 					"$fontsdir/$f" \
 					-i "$in" \
-					-y -frames 0 -f null /dev/null
+					-frames 0 -f null /dev/null
 				;;
 		esac
 		stream=$(($stream + 1))
