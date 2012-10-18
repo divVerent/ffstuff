@@ -25,7 +25,6 @@ ffencode.sh \
 	-y \
 	-nostdin \
 	-f mp4 \
-	-vsync vfr \
 	-codec:a libfdk_aac \
 		-b:a 96k \
 	-codec:v libx264 \
