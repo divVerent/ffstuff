@@ -51,7 +51,6 @@ use_streams()
 			score=$(($score + 1))
 		fi
 	fi
-	echo >&2 "CANDIDATE: $v/$a/$s -> $score"
 	if [ $score -gt $hiscore ]; then
 		hiscore=$score
 		hiv=$v
@@ -69,7 +68,6 @@ match_lang()
 
 	# lowercase and clean up the stream language
 	set -- "$1" "$2" "`echo "$3" | tr -d : | tr A-Z a-z`" "$4"
-	echo >&2 "match_lang($1, $2, $3, $4)"
 	# match
 	case "$2":"$3":"$4" in
 		# requested is empty: we want no stream at all
@@ -86,7 +84,6 @@ match_lang()
 		# otherwise fail
 		*) return 1 ;;
 	esac
-	echo >&2 "YES"
 	return 0
 }
 
