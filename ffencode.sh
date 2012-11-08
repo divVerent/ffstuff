@@ -62,6 +62,8 @@ eval `ffprobe -print_format flat=s=_ -show_format -show_streams "$in"`
 
 add_filters
 
+. ffautofilters.inc
+
 # if we want to hardsub... let's do it
 if $hardsub; then
 	. ffhardsub.inc
