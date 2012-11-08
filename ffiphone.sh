@@ -36,11 +36,8 @@ ffencode.sh \
 		-level:v 30 \
 		-profile:v baseline \
 		-tune:v animation \
-	-filter_complex \
-		"[VIDEO_IN]\
-		scale=\
+	-vf-post "scale=\
 			$mode($w\\,floor($h*dar/$div+.5)*$div):\
-			$mode(floor($w/dar/$div+.5)*$div\\,$h)\
-		[scaled]; \
-		[scaled] setsar=1:1 [VIDEO_OUT]" \
+			$mode(floor($w/dar/$div+.5)*$div\\,$h)" \
+	-vf-post "setsar=1:1" \
 	"$@"

@@ -18,7 +18,13 @@ add_filter()
 }
 
 filtergraph=
-isfilter=false
+VIDEOfpre=0
+VIDEOfpost=0
+AUDIOfpre=0
+AUDIOfpost=0
+SUBfpre=0
+SUBfpost=0
+isfilter=
 first=true
 # extract the filter graph data
 for arg in "$@"; do
@@ -26,14 +32,66 @@ for arg in "$@"; do
 		first=false
 		set --
 	fi
-	if $isfilter; then
-		isfilter=false
-		add_filter "$arg"
-	elif [ x"$arg" = x"-filter_complex" ]; then
-		isfilter=true
-	else
-		set -- "$@" "$arg"
-	fi
+	case "$isfilter:$arg" in
+		'':-filter_complex)
+			isfilter=-filter_complex
+			;;
+		-filter_complex:*)
+			add_filter "$arg"
+			isfilter=
+			;;
+		'':-vf-pre)
+			isfilter=-vf-pre
+			;;
+		-vf-pre:*)
+			eval VIDEOfpre_$VIDEOfpre=\$arg
+			VIDEOfpre=$(($VIDEOfpre+1))
+			isfilter=
+			;;
+		'':-vf-post)
+			isfilter=-vf-post
+			;;
+		-vf-post:*)
+			eval VIDEOfpost_$VIDEOfpost=\$arg
+			VIDEOfpost=$(($VIDEOfpost+1))
+			isfilter=
+			;;
+		'':-af-pre)
+			isfilter=-af-pre
+			;;
+		-af-pre:*)
+			eval AUDIOfpre_$AUDIOfpre=\$arg
+			AUDIOfpre=$(($AUDIOfpre+1))
+			isfilter=
+			;;
+		'':-af-post)
+			isfilter=-af-post
+			;;
+		-af-post:*)
+			eval AUDIOfpost_$AUDIOfpost=\$arg
+			AUDIOfpost=$(($AUDIOfpost+1))
+			isfilter=
+			;;
+		'':-sf-pre)
+			isfilter=-sf-pre
+			;;
+		-sf-pre:*)
+			eval SUBfpre_$SUBfpre=\$arg
+			SUBfpre=$(($SUBfpre+1))
+			isfilter=
+			;;
+		'':-sf-post)
+			isfilter=-sf-post
+			;;
+		-sf-post:*)
+			eval SUBfpost_$SUBfpost=\$arg
+			SUBfpost=$(($SUBfpost+1))
+			isfilter=
+			;;
+		*)
+			set -- "$@" "$arg"
+			;;
+	esac
 done
 
 have_label()
@@ -154,3 +212,23 @@ connect_outputs()
 		fi
 	fi
 }
+
+# now add possible pre-/posterous filters
+for t in AUDIO VIDEO SUB; do
+	eval n=\$$t"fpre"
+	i=0
+	while [ $i -lt $n ]; do
+		plug_after_first "$t""_IN" "$t""_OUT"
+		eval f=\$$t"fpre_"$i
+		add_filter "[$t""_IN] $f [$plug]"
+		i=$(($i+1))
+	done
+	eval n=\$$t"fpost"
+	i=0
+	while [ $i -lt $n ]; do
+		plug_before_last "$t""_IN" "$t""_OUT"
+		eval f=\$$t"fpost_"$i
+		add_filter "[$plug] $f [$t""_OUT]"
+		i=$(($i+1))
+	done
+done
