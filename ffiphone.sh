@@ -36,6 +36,7 @@ ffencode.sh \
 		-level:v 30 \
 		-profile:v baseline \
 		-tune:v animation \
+	-af-post "volume=-1dB" \
 	-vf-post "scale=\
 			$mode($w\\,floor($h*dar/$div+.5)*$div):\
 			$mode(floor($w/dar/$div+.5)*$div\\,$h)" \
