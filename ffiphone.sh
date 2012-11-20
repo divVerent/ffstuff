@@ -41,5 +41,5 @@ ffencode.sh \
 	-vf-post "scale=\
 			$mode($w\\,floor($h*dar/$div+.5)*$div):\
 			$mode(floor($w/dar/$div+.5)*$div\\,$h)" \
-	-vf-post "setsar=1:1" \
+	-vf-post "setsar=1/1" \
 	"$@"
