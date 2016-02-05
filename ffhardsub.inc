@@ -14,6 +14,21 @@ if [ -n "$s" ] && [ x"$t" = x"dvdsub" ]; then
 	plug_after_first VIDEO_IN VIDEO_OUT
 	add_filter "[VIDEO_IN] [SUB_OUT] overlay [$plug]"
 elif [ -n "$s" ]; then
-	plug_before_last VIDEO_IN VIDEO_OUT
-	add_filter "[$plug] subtitles=f=$in:original_size=${w}x${h}:si=$s"
+	si=0
+	for ss in $sstreams; do
+		if [ "$ss" -eq "$s" ]; then
+			plug_before_last VIDEO_IN VIDEO_OUT
+			escape() {
+				echo "$1" | sed -e 's/[^A-Za-z0-9]/\\&/g'
+			}
+			in_escaped=`escape "$in"`
+			add_filter "[$plug] subtitles=f=${in_escaped}:original_size=${w}x${h}:si=$si"
+			si=
+			break
+		fi
+		si=$((si + 1))
+	done
+	if [ -n "$si" ]; then
+		echo >&2 "Failed to find subtitle stream $s (available: $sstreams)."
+	fi
 fi
