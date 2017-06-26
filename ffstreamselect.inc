@@ -32,6 +32,10 @@ use_streams()
 	score=1
 	if [ -n "$v" ]; then
 		score=$(($score + 10))
+		eval d=\$streams_stream_${v}_disposition_attached_pic
+		if [ $d -gt 0 ]; then
+			continue
+		fi
 		eval d=\$streams_stream_${v}_disposition_default
 		if [ $d -gt 0 ]; then
 			score=$(($score + 1))
