@@ -28,6 +28,7 @@ ffencode.sh \
 	-y \
 	-nostdin \
 	-f mp4 \
+		-movflags +faststart \
 	-vsync vfr -r 120000 \
 	-codec:a libfdk_aac \
 		-b:a 96k \
