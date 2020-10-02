@@ -40,5 +40,6 @@ ffencode.sh \
 	-vf-post "scale=\
 			floor(min($w*$mode(1\\,dar/$dar)\\,in_w*max(1\\,sar/$sar))/2+0.5)*2:\
 			floor(min($h*$mode($dar/dar\\,1)\\,in_h*max($sar/sar\\,1))/2+0.5)*2" \
+	-vf-post "format=yuv420p|yuvj420p" \
 	-vf-post "setsar=1/1" \
 	"$@"
