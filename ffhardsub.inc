@@ -2,7 +2,7 @@ eval t=\$streams_stream_${s}_codec_name
 eval w=\$streams_stream_${v}_width
 eval h=\$streams_stream_${v}_height
 
-if [ -n "$s" ] && [ x"$t" = x"dvd_subtitle" ]; then
+if [ -n "$s" ] && { [ x"$t" = x"dvd_subtitle" ] || [ x"$t" = x"hdmv_pgs_subtitle" ]; }; then
 	# these subs get merged at the INPUT side so we can match up the size
 	if [ -n "$w" ] && [ -n "$h" ]; then
 		plug_before_last SUB_IN SUB_OUT
@@ -13,6 +13,8 @@ if [ -n "$s" ] && [ x"$t" = x"dvd_subtitle" ]; then
 	fi
 	plug_after_first VIDEO_IN VIDEO_OUT
 	add_filter "[VIDEO_IN] [SUB_OUT] overlay [$plug]"
+	plug_after_first VIDEO_IN VIDEO_OUT
+	add_filter "[VIDEO_IN] scale=$w:$h [$plug]"
 elif [ -n "$s" ]; then
 	si=0
 	for ss in $sstreams; do
