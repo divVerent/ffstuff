@@ -71,7 +71,7 @@ match_lang()
 	# $4: requested language
 
 	# lowercase and clean up the stream language
-	set -- "$1" "$2" "`echo "$3" | tr -d : | tr A-Z a-z`" "$4"
+	set -- "$1" "$2" "`printf '%s\n' "$3" | tr -d : | tr A-Z a-z`" "$4"
 	# match
 	case "$2":"$3":"$4" in
 		# requested is empty: we want no stream at all

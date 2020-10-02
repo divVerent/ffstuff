@@ -109,7 +109,7 @@ have_label()
 rewire()
 {
 	if have_label "$1"; then
-		filtergraph=`echo "$filtergraph" |\
+		filtergraph=`printf '%s\n' "$filtergraph" |\
 			sed -e "s/\[$1\]/\[$2\]/g"`
 		true
 	else
@@ -192,23 +192,23 @@ connect_outputs()
 
 	# connect the outputs
 	if have_label VIDEO_OUT; then
-		echo -map "[VIDEO_OUT]"
+		printf '-map [VIDEO_OUT]\n'
 	fi
 	if [ -n "$v" ]; then
-		echo -map 0:"$v"
+		printf '-map 0:%d\n' "$v"
 	fi
 	if have_label AUDIO_OUT; then
-		echo -map "[AUDIO_OUT]"
+		printf '-map [AUDIO_OUT]\n'
 	fi
 	if [ -n "$a" ]; then
-		echo -map 0:"$a"
+		printf '-map 0:%d\n' "$a"
 	fi
 	if ! $hardsub; then
 		if have_label SUB_OUT; then
-			echo -map "[SUB_OUT]"
+			printf '-map [SUB_OUT]\n'
 		fi
 		if [ -n "$s" ]; then
-			echo -map 0:"$s"
+			printf '-map 0:%d\n' "$s"
 		fi
 	fi
 }

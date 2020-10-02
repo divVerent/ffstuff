@@ -19,10 +19,10 @@ elif [ -n "$s" ]; then
 		if [ "$ss" -eq "$s" ]; then
 			plug_before_last VIDEO_IN VIDEO_OUT
 			escape() {
-				echo "$1" | sed -e 's,[^A-Za-z0-9],\\&,g'
+				printf '%s\n' "$1" | sed -e 's,[^A-Za-z0-9],\\\\\\&,g'
 			}
 			in_escaped=`escape "$in"`
-			add_filter "[$plug] subtitles='f=${in_escaped}:original_size=${w}x${h}:si=$si'"
+			add_filter "[$plug] subtitles=f=${in_escaped}:original_size=${w}x${h}:si=$si"
 			si=
 			break
 		fi
