@@ -192,23 +192,23 @@ connect_outputs()
 
 	# connect the outputs
 	if have_label VIDEO_OUT; then
-		printf '-map [VIDEO_OUT]\n'
+		printf -- '-map [VIDEO_OUT]\n'
 	fi
 	if [ -n "$v" ]; then
-		printf '-map 0:%d\n' "$v"
+		printf -- '-map 0:%d\n' "$v"
 	fi
 	if have_label AUDIO_OUT; then
-		printf '-map [AUDIO_OUT]\n'
+		printf -- '-map [AUDIO_OUT]\n'
 	fi
 	if [ -n "$a" ]; then
-		printf '-map 0:%d\n' "$a"
+		printf -- '-map 0:%d\n' "$a"
 	fi
 	if ! $hardsub; then
 		if have_label SUB_OUT; then
-			printf '-map [SUB_OUT]\n'
+			printf -- '-map [SUB_OUT]\n'
 		fi
 		if [ -n "$s" ]; then
-			printf '-map 0:%d\n' "$s"
+			printf -- '-map 0:%d\n' "$s"
 		fi
 	fi
 }
