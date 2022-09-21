@@ -18,8 +18,8 @@ ffencode.sh \
 		-b:a 96k \
 	-codec:v libx264 \
 		-threads:v 0 \
-		-profile:v high \
+		-profile:v high444 \
 		-tune:v animation \
 		-crf:v 23 \
-	-vf-post "setsar=$sar" \
+	-vf-post scale \
 	"$@"
