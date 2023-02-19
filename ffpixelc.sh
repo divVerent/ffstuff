@@ -28,7 +28,7 @@ ffencode.sh \
 	-y \
 	-nostdin \
 	-f webm \
-	-vsync vfr -r 120000 \
+	-fps_mode vfr \
 	-codec:a libvorbis \
 	-codec:v libvpx-vp9 \
 		-pass 1 \
@@ -48,7 +48,7 @@ ffencode.sh \
 	-y \
 	-nostdin \
 	-f webm \
-	-vsync vfr -r 120000 \
+	-fps_mode vfr \
 	-codec:a libvorbis \
 	-codec:v libvpx-vp9 \
 		-pass 2 \

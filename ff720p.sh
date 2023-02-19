@@ -29,8 +29,8 @@ ffencode.sh \
 	-nostdin \
 	-f mp4 \
 		-movflags +faststart \
-	-vsync vfr -r 120000 \
-	-codec:a libfdk_aac \
+	-fps_mode vfr \
+	-codec:a aac \
 		-b:a 96k \
 	-codec:v libx264 \
 		-threads:v 0 \
