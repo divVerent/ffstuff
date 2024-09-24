@@ -41,6 +41,7 @@ ffencode.sh \
 		-rc_init_occupancy:v 9000k \
 		-refs:v 5 \
 		-crf:v 23 \
+	-pix_fmt yuv420p \
 	-vf-post "scale=\
 			floor(min($w*$mode(1\\,dar/$dar)\\,in_w*max(1\\,sar/$sar))/2+0.5)*2:\
 			floor(min($h*$mode($dar/dar\\,1)\\,in_h*max($sar/sar\\,1))/2+0.5)*2" \

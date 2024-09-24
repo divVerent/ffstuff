@@ -21,5 +21,6 @@ ffencode.sh \
 		-profile:v high444 \
 		-tune:v animation \
 		-crf:v 23 \
+	-pix_fmt yuv444p \
 	-vf-post scale \
 	"$@"
