@@ -30,7 +30,7 @@ ffencode.sh \
 	-f mp4 \
 		-movflags +faststart \
 	-fps_mode vfr \
-	-codec:a libfdk_aac \
+	-codec:a aac \
 		-b:a 96k \
 	-codec:v libx264 \
 		-threads:v 0 \
